@@ -31,16 +31,17 @@
             <label for="distance" class="block text-sm font-medium text-gray-700 dark:text-white text-left mt-2">Distance</label>
             <select id="distance" name="distance"
                 class="mt-1 block col-span-2 text-black bg-white dark:text-white  dark:bg-gray-800 outline-none border-1 border-gray-100 rounded-md shadow-sm">
+                <option value="0" selected>All</option>
                 <option value="1">Within 1 km</option>
                 <option value="3">Within 3 km</option>
-                <option value="5" selected>Within 5 km</option>
+                <option value="5">Within 5 km</option>
             </select>
         </div>
 
         <!-- searching button -->
         <form method="GET" action="/" class="flex items-center gap-2">
             <input type="text" name="search" placeholder="Search..."
-                class="border border-gray-300 rounded-md px-3 py-1 w-full text-sm border-1 border-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800">
+                class="border border-gray-300 rounded-md px-3 py-1 w-full text-sm border-1 border-gray-500 bg-white f0cus:outline-none focus:ring-1 focus:ring-blue-500 dark:bg-gray-800">
             <button type="submit"
                 class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 py-1.5 rounded-md">
                 🔍
