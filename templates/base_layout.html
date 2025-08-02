@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Civic Track{% endblock %}</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
+  {% include "components/darkmode.html" %}
+  <script src="{{ url_for('static', filename='js/tailwind.config.js') }}"></script>
+</head>
+
+<body class="dark:bg-gray-800 dark:text-white bg-white text-black">
+  {% include "components/header.html" %}
+  <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
+  {% block content %}
+  <!-- Child templates will inject content here -->
+  {% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+  <script src="{{ url_for('static', filename='js/dark-mode.js') }}"></script>
+</body>
+
+</html>
