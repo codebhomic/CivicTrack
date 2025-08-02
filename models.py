@@ -9,27 +9,32 @@ class IssueCategory(db.Model):
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(200))
     timestamp = db.Column(db.DateTime, default=datetime.datetime.now(datetime.timezone.utc))
-
 class Issue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.Text, nullable=False)
     image_url = db.Column(db.String(255))
     status = db.Column(db.String(50), default='Reported')
-    category = db.Column(db.String(50))
-    distance = db.Column(db.String(10))  # for display (e.g., '2.3 km')
 
-    def to_dict(self):
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    
+    category_id = db.Column(db.Integer, db.ForeignKey('issue_category.id'))
+    category = db.relationship('IssueCategory', backref='issues')
+
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+
+    def to_dict(self, distance=None):
         return {
             'id': self.id,
             'title': self.title,
             'description': self.description,
             'image_url': self.image_url,
             'status': self.status,
-            'category': self.category,
-            'distance': self.distance
+            'category': self.category.name if self.category else None,
+            'user': self.user.username if self.user else "Anonymous",
+            'distance': f"{distance:.1f} km" if distance else None,
         }
-
 
 class Flag(db.Model):
     id = db.Column(db.Integer, primary_key=True)

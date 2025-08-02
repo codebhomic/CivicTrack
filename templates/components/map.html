@@ -1,0 +1,28 @@
+<!-- HTML -->
+<div id="map" class="h-64 w-full rounded mb-4"></div>
+<input type="hidden" name="latitude" id="latitude">
+<input type="hidden" name="longitude" id="longitude">
+
+<script>
+  const map = L.map('map').setView([30.7333, 76.7794], 13); // Chandigarh default
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  let marker = L.marker([30.7333, 76.7794], { draggable: true }).addTo(map);
+
+  function updateLatLng(lat, lng) {
+    document.getElementById('latitude').value = lat;
+    document.getElementById('longitude').value = lng;
+  }
+
+  updateLatLng(30.7333, 76.7794);
+
+  marker.on('dragend', function (e) {
+    const latlng = marker.getLatLng();
+    updateLatLng(latlng.lat, latlng.lng);
+  });
+
+  map.on('click', function (e) {
+    marker.setLatLng(e.latlng);
+    updateLatLng(e.latlng.lat, e.latlng.lng);
+  });
+</script>

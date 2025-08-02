@@ -1,12 +1,29 @@
-from flask import Flask,render_template,request,jsonify
+from flask import Flask,render_template,request,jsonify,session,flash
 from flask_sqlalchemy import SQLAlchemy
-from models import db, User, Issue, IssueCategory, StatusLog
+from flask import redirect, url_for
+from flask_login import login_required, current_user
+from models import db, Issue, IssueCategory,User
+from flask_login import LoginManager,login_required
+from auth import auth  # ← important: import the Blueprint, not the file
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///civictrack.db'
+app.secret_key = 'your-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///yourdb.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = 'your_secret_key'
+
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 db.init_app(app)
+
+# Register Blueprint
+app.register_blueprint(auth, url_prefix='/auth')
 
 all_issues = [
         {
@@ -67,6 +84,34 @@ def get_issues():
         "per_page": per_page
     })
 
+
+@app.route("/report", methods=["GET", "POST"])
+@login_required
+def report_issue():
+    if request.method == "POST":
+        title = request.form["title"]
+        description = request.form["description"]
+        category_id = request.form["category"]
+        image_url = request.form.get("image_url", "")
+        latitude = float(request.form.get("latitude", 0))
+        longitude = float(request.form.get("longitude", 0))
+
+        new_issue = Issue(
+            title=title,
+            description=description,
+            category_id=category_id,
+            image_url=image_url,
+            latitude=latitude,
+            longitude=longitude,
+            user_id=current_user.id
+        )
+        db.session.add(new_issue)
+        db.session.commit()
+        flash("Issue reported successfully!", "success")
+        return redirect(url_for("report_issue"))
+
+    categories = IssueCategory.query.all()
+    return render_template("report.html", categories=categories)
 
 with app.app_context():
     db.create_all()

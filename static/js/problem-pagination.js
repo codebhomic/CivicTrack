@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     issueContainer.appendChild(card);
                 });
-            }, 2000);
+            }, 900);
         }
     });
 });
