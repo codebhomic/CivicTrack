@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 import datetime
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -51,7 +52,7 @@ class StatusLog(db.Model):
     note = db.Column(db.String(255))  # optional admin note
     timestamp = db.Column(db.DateTime, default=datetime.datetime.now(datetime.timezone.utc))
 
-class User(db.Model):
+class User(UserMixin,db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(150), unique=True, nullable=False)
@@ -60,7 +61,7 @@ class User(db.Model):
     role = db.Column(db.String(20), default='citizen')  # 'citizen', 'admin', 'moderator'
     is_verified = db.Column(db.Boolean, default=False)
     is_banned = db.Column(db.Boolean, default=False)
-
+    is_active = db.Column(db.Boolean, default=True)
     issues = db.relationship('Issue', backref='user', lazy=True)
     flags = db.relationship('Flag', backref='user', lazy=True)
     timestamp = db.Column(db.DateTime, default=datetime.datetime.now(datetime.timezone.utc))
