@@ -15,7 +15,7 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and user.check_password(password):
             session['user_id'] = user.id
-            login_user(user=user)
+            # login_user(user=user)
             flash('Logged in successfully.')
             return redirect(url_for('home'))
         else:
@@ -42,6 +42,6 @@ def register():
 @auth.route('/logout')
 def logout():
     session.clear()
-    logout_user()
+    # logout_user()
     flash('You have been logged out.')
     return redirect(url_for('auth.login'))
